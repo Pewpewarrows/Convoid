@@ -1,1 +1,45 @@
 Convoid is the unofficial Convore app for Android!
+
+Convoid will eventually consist of 9 Activity screens, a Widget, a Background
+Service to notify the User of updates events, and will hook 
+into several Intents to share media in Convore.
+
+The Loading Activity is the only entry point into the application. It
+will display a friendly splash logo for the app, inform the user of its status
+(Loading, Contacting Convore, etc), and redirect the user to either the main
+Convoid Activity if logged in, otherwise the ConvoreLogin Activity.
+
+The ConvoreLogin Activity will only be accessible if the User is not currently
+logged in. It will display a smaller Convoid logo, username and password fields, 
+a Remember Me checkbox, and a Login button.
+
+The central Convoid Activity will be a dashboard of sorts, providing the User
+with a nice overview and status of events like unread topics and messages,
+mentions of said User, summary of Groups the User is a member of, and potentially
+the number of Users online at the moment.
+
+The Discover Activity will be a ListView of Groups, filterable and sortable 
+so that the User can manage their existing Memberships.
+
+The Mentions Activity will just be a ListView of Messages mentioning the User.
+Touching these Messages will take the User to the Topic Activity, highlight, and 
+scroll to the Message just touched.
+
+The Group Activity will present a ListView of Topics. Touching a Topic will take 
+the User to the Topic Activity.
+
+The Topic Activity will be a ListView of Messages, displayed such that the most 
+recent Messages are at the bottom of the display area.
+
+Additionally, there will be simple New Group and New Topic Activities.
+
+The Widget will be a smaller version of the Convoid Activity, providing a brief 
+status window into the User's account.
+
+Ideally the app should hook into the more popular Intents for sharing media with 
+other Convore Users.
+
+Finally, the Background Service will act as a much longer interval poll of the 
+Live feed and/or Groups feed, and present a Notification in the Status Bar 
+to the User based on preferences, including frequency of the interval and whether 
+to Notify for Group Updates, Mentions, or both.

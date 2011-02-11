@@ -6,7 +6,10 @@ package com.pewpewarrows.convoid;
 import com.pewpewarrows.convore.ConvoreUser;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +26,8 @@ import android.widget.Button;
  *
  */
 public class ConvoreLogin extends Activity {
+	AlertDialog.Builder mAlert;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,16 +39,21 @@ public class ConvoreLogin extends Activity {
 				new LoginProgressTask().execute();
 			}
 		});
+		
+		mAlert = new AlertDialog.Builder(this);
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
 		
+		/*
+		 * We want this here instead of onCreate in case the User ever accidentally
+		 * gets back to this Activity.
+		 */
 		new CheckLoginProgressTask().execute();
 	}
 	
-	// TODO: Make this Public so we can check if logged-in on every Activity?
 	private class CheckLoginProgressTask extends AsyncTask<Void, Integer, Boolean> {
 		ProgressDialog checkProgress;
 		
@@ -54,7 +64,19 @@ public class ConvoreLogin extends Activity {
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			boolean loggedIn = ConvoreUser.isLoggedIn();
+			boolean loggedIn = false;
+			
+			try {
+				loggedIn = ConvoreUser.isLoggedIn();
+			} catch (Exception e) {
+				mAlert.setMessage("Convore is either not available, or you current don't have Internet access.")
+					.setCancelable(false)
+					.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							ConvoreLogin.this.finish();
+						}
+					});
+			}
 			
 			return loggedIn;
 		}
@@ -65,6 +87,9 @@ public class ConvoreLogin extends Activity {
 			
 			if (result) {
 				// Spawn the main Convoid Activity and kill self
+				Intent i = new Intent(ConvoreLogin.this, Convoid.class);
+				startActivity(i);
+				finish();
 			}
 		}
 	}
@@ -88,6 +113,11 @@ public class ConvoreLogin extends Activity {
 			
 			if (result) {
 				// Spawn the main Convoid Activity and kill self
+				Intent i = new Intent(ConvoreLogin.this, Convoid.class);
+				startActivity(i);
+				finish();
+			} else {
+				// Show clean Error Message
 			}
 		}
 	}

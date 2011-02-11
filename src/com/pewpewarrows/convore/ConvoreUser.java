@@ -14,23 +14,15 @@ public class ConvoreUser {
 	public String url;
 	public String username;
 	
-	public static boolean isLoggedIn() {
+	public static boolean isLoggedIn() throws ClientProtocolException, IOException {
 		HttpGet httpRequest = new HttpGet(ConvoreAPI.accountUrl());
 		HttpClient httpclient = new DefaultHttpClient();
+	
+		HttpResponse response = httpclient.execute(httpRequest);
+		int statusCode = response.getStatusLine().getStatusCode();
 		
-		try {
-			HttpResponse response = httpclient.execute(httpRequest);
-			int statusCode = response.getStatusLine().getStatusCode();
-			
-			if (statusCode == 200) {
-				return true;
-			}
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (statusCode == 200) {
+			return true;
 		}
 		
 		return false;
