@@ -15,7 +15,8 @@ public class ConvoreUser {
 	public String username;
 	
 	public static boolean isLoggedIn() throws ClientProtocolException, IOException {
-		HttpGet httpRequest = new HttpGet(ConvoreAPI.accountUrl());
+		String accountUrl = ConvoreAPI.accountUrl();
+		HttpGet httpRequest = new HttpGet(accountUrl);
 		HttpClient httpclient = new DefaultHttpClient();
 	
 		HttpResponse response = httpclient.execute(httpRequest);

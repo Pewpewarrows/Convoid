@@ -26,7 +26,7 @@ import android.widget.Button;
  *
  */
 public class ConvoreLogin extends Activity {
-	AlertDialog.Builder mAlert;
+	AlertDialog.Builder mBuilder;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class ConvoreLogin extends Activity {
 			}
 		});
 		
-		mAlert = new AlertDialog.Builder(this);
+		mBuilder = new AlertDialog.Builder(this);
 	}
 	
 	@Override
@@ -54,7 +54,7 @@ public class ConvoreLogin extends Activity {
 		new CheckLoginProgressTask().execute();
 	}
 	
-	private class CheckLoginProgressTask extends AsyncTask<Void, Integer, Boolean> {
+	private class CheckLoginProgressTask extends AsyncTask<Void, Integer, String> {
 		ProgressDialog checkProgress;
 		
 		@Override
@@ -62,34 +62,44 @@ public class ConvoreLogin extends Activity {
 			checkProgress = ProgressDialog.show(ConvoreLogin.this, "", "Contacting Convore...", true);
 		}
 		
+		/*
+		 * Check if the User is already logged into Convore, and kills the app
+		 * if Convore is either offline or there is no network access.
+		 * 
+		 * @see android.os.AsyncTask#doInBackground(Params[])
+		 */
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			boolean loggedIn = false;
+		protected String doInBackground(Void... params) {
+			String loggedIn = "false";
 			
 			try {
-				loggedIn = ConvoreUser.isLoggedIn();
+				loggedIn = new Boolean(ConvoreUser.isLoggedIn()).toString();
 			} catch (Exception e) {
-				mAlert.setMessage("Convore is either not available, or you current don't have Internet access.")
-					.setCancelable(false)
-					.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							ConvoreLogin.this.finish();
-						}
-					});
+				loggedIn = "error";
 			}
 			
 			return loggedIn;
 		}
 		
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(String result) {
 			checkProgress.dismiss();
 			
-			if (result) {
+			if (result == "true") {
 				// Spawn the main Convoid Activity and kill self
 				Intent i = new Intent(ConvoreLogin.this, Convoid.class);
 				startActivity(i);
 				finish();
+			} else if (result == "error") {
+				mBuilder.setMessage("Convore is either not available, or you currently don't have Internet access.")
+					.setCancelable(false)
+					.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+							ConvoreLogin.this.finish();
+						}
+					})
+					.show();
 			}
 		}
 	}
@@ -104,7 +114,7 @@ public class ConvoreLogin extends Activity {
 		
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			return true;
+			return false;
 		}
 		
 		@Override
@@ -118,6 +128,14 @@ public class ConvoreLogin extends Activity {
 				finish();
 			} else {
 				// Show clean Error Message
+				mBuilder.setMessage("The Username or Password is incorrect.")
+					.setCancelable(false)
+					.setNeutralButton("Okay", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					})
+					.show();
 			}
 		}
 	}
