@@ -1,0 +1,43 @@
+# Much thanks to GitHub's gitignore repo
+
+# Generic
+*.log
+*.db
+
+# Operating System
+.DS_Store?
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.cache
+Thumbs.db
+Desktop.ini
+
+# Editor
+*~
+*.sw[a-p]
+*.bak
+.project
+*.pydevproject
+.metadata
+local.properties
+.classpath
+tags
+TAGS
+
+# Language
+
+# Python
+*.py[co]
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+develop-eggs
+.installed.cfg
+
+# Project
