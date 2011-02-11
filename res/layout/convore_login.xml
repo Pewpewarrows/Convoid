@@ -32,7 +32,7 @@ android:orientation="vertical"
     <Button 
     android:text="Login" 
     android:id="@+id/login_button" 
-    android:layout_width="100px" 
+    android:layout_width="100dp" 
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|center_horizontal|center"
     ></Button>
